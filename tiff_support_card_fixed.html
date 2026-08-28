@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#fbf4ee" />
+  <title>With Love — For Tiff</title>
+  <style>
+    :root{
+      --paper:#fbf4ee;
+      --paper-2:#fffaf6;
+      --ink:#573b3b;
+      --ink-soft:#846b68;
+      --burgundy:#6f3440;
+      --sage:#71816d;
+      --shadow:0 20px 45px rgba(99,68,67,.16);
+      --focus:#8a5b67;
+      --gold:#d8ad55;
+      --gold-deep:#8a6126;
+      --heart-1:#dca0aa;
+      --heart-2:#d596a3;
+      --heart-3:#e0a59b;
+      --heart-4:#c9939e;
+      --heart-5:#dfa7ac;
+      --heart-6:#d49aa5;
+      --heart-7:#e1a699;
+      --heart-8:#cc929f;
+      --heart-9:#d9a1a8;
+      --heart-10:#d29aa3;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.96) 0 24%, rgba(255,250,246,.86) 46%, rgba(250,239,232,.82) 100%),
+        repeating-linear-gradient(0deg, rgba(120,92,77,.025) 0 1px, transparent 1px 4px),
+        var(--paper);
+      font-family: Georgia, "Times New Roman", serif;
+      overflow-x:hidden;
+    }
+
+    body.modal-open{ overflow:hidden; }
+
+    .page{
+      position:relative;
+      min-height:100vh;
+      isolation:isolate;
+      overflow:hidden;
+      padding:64px 28px 72px;
+    }
+
+    .page::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:-3;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 9% 19%, rgba(231,174,180,.14), transparent 21%),
+        radial-gradient(circle at 90% 76%, rgba(218,183,128,.12), transparent 24%),
+        radial-gradient(circle at 78% 16%, rgba(122,145,118,.08), transparent 22%);
+    }
+
+    header{
+      position:relative;
+      z-index:3;
+      text-align:center;
+      max-width:880px;
+      margin:0 auto 44px;
+    }
+
+    .eyebrow{
+      margin:0 0 10px;
+      font:600 13px/1.2 Arial, Helvetica, sans-serif;
+      letter-spacing:.28em;
+      color:#a37674;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(52px, 5vw, 78px);
+      line-height:.98;
+      font-weight:500;
+      letter-spacing:-.025em;
+      color:#6b3d48;
+    }
+
+    .instruction{
+      margin:20px 0 0;
+      font-size:21px;
+      line-height:1.45;
+      color:#6f5a58;
+    }
+
+    .subline{
+      margin:8px 0 0;
+      font-size:17px;
+      line-height:1.5;
+      color:#987f7a;
+      font-style:italic;
+    }
+
+    .garden{
+      position:relative;
+      z-index:3;
+      display:grid;
+      grid-template-columns:repeat(5, minmax(180px, 220px));
+      justify-content:center;
+      gap:34px 34px;
+      max-width:1240px;
+      margin:0 auto;
+      padding:8px 0 18px;
+    }
+
+    .heart-button{
+      --heart-color:var(--heart-1);
+      width:210px;
+      height:196px;
+      padding:0;
+      border:0;
+      background:transparent;
+      cursor:pointer;
+      position:relative;
+      justify-self:center;
+      border-radius:44% 44% 48% 48%;
+      transition:transform .28s ease, filter .5s ease;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .heart-button:nth-child(2){ --heart-color:var(--heart-2); transform:translateY(8px); }
+    .heart-button:nth-child(3){ --heart-color:var(--heart-3); transform:translateY(-4px); }
+    .heart-button:nth-child(4){ --heart-color:var(--heart-4); transform:translateY(7px); }
+    .heart-button:nth-child(5){ --heart-color:var(--heart-5); transform:translateY(-2px); }
+    .heart-button:nth-child(6){ --heart-color:var(--heart-6); transform:translateY(4px); }
+    .heart-button:nth-child(7){ --heart-color:var(--heart-7); transform:translateY(-6px); }
+    .heart-button:nth-child(8){ --heart-color:var(--heart-8); transform:translateY(7px); }
+    .heart-button:nth-child(9){ --heart-color:var(--heart-9); transform:translateY(-2px); }
+    .heart-button:nth-child(10){ --heart-color:var(--heart-10); transform:translateY(5px); }
+
+    .heart-button:hover{
+      filter:drop-shadow(0 14px 16px rgba(91,52,61,.18));
+    }
+
+    .heart-button:focus-visible{
+      outline:3px solid var(--focus);
+      outline-offset:6px;
+    }
+
+    .heart-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      filter:drop-shadow(0 12px 12px rgba(102,62,70,.14));
+    }
+
+    .heart-shape{
+      fill:var(--heart-color);
+      transition:fill .7s ease, filter .7s ease;
+    }
+
+    .heart-highlight{
+      fill:rgba(255,255,255,.16);
+      opacity:.8;
+    }
+
+    .heart-label{
+      position:absolute;
+      z-index:2;
+      left:50%;
+      top:48%;
+      width:72%;
+      transform:translate(-50%,-50%);
+      text-align:center;
+      font:600 25px/1.25 Georgia, "Times New Roman", serif;
+      color:#fffaf8;
+      text-shadow:0 1px 2px rgba(80,44,50,.18);
+      pointer-events:none;
+    }
+
+    .heart-label .mini-heart{
+      display:block;
+      margin-top:3px;
+      font-size:20px;
+      line-height:1;
+      filter:saturate(.85);
+    }
+
+    .heart-button.is-read{
+      --heart-color:var(--gold);
+      filter:drop-shadow(0 0 10px rgba(219,173,79,.22));
+    }
+
+    .heart-button.is-read .heart-label{
+      color:#654320;
+      text-shadow:0 1px 0 rgba(255,255,255,.22);
+    }
+
+    .heart-button.is-read::after{
+      content:"✦";
+      position:absolute;
+      right:20px;
+      top:33px;
+      color:#fff0b0;
+      font:700 15px/1 Arial, sans-serif;
+      opacity:.72;
+      text-shadow:0 0 9px rgba(255,238,170,.75);
+      animation:softTwinkle 3.5s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    .heart-button.opening{
+      z-index:20;
+      animation:heartLift .46s ease both;
+    }
+
+    @keyframes heartLift{
+      0%{ filter:drop-shadow(0 12px 12px rgba(102,62,70,.14)); }
+      50%{ transform:translateY(-16px) scale(1.08); }
+      100%{ transform:translateY(-8px) scale(1.02); }
+    }
+
+    @keyframes softTwinkle{
+      0%,100%{ opacity:.35; transform:scale(.85) rotate(0deg); }
+      50%{ opacity:.9; transform:scale(1.12) rotate(10deg); }
+    }
+
+    .final-note{
+      position:relative;
+      z-index:3;
+      max-width:780px;
+      margin:30px auto 0;
+      padding:18px 24px;
+      text-align:center;
+      color:#725334;
+      font-size:22px;
+      line-height:1.5;
+      opacity:0;
+      transform:translateY(12px);
+      pointer-events:none;
+      transition:opacity 1s ease, transform 1s ease;
+    }
+
+    .final-note.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .final-note::before,
+    .final-note::after{
+      content:"✦";
+      color:#d6a84c;
+      opacity:.55;
+      margin:0 12px;
+    }
+
+    /* Watercolor botanical frame */
+    .botanical{
+      position:absolute;
+      z-index:0;
+      pointer-events:none;
+      opacity:.92;
+      overflow:visible;
+      filter:saturate(.86);
+    }
+
+    .botanical.tl{ width:420px; height:330px; top:-30px; left:-42px; }
+    .botanical.tr{ width:360px; height:300px; top:-20px; right:-55px; transform:scaleX(-1); opacity:.78; }
+    .botanical.bl{ width:340px; height:285px; bottom:-48px; left:-45px; transform:scaleY(-1); opacity:.74; }
+    .botanical.br{ width:440px; height:350px; right:-58px; bottom:-52px; transform:scale(-1); }
+
+    .stem{ fill:none; stroke:#7f967a; stroke-width:4; stroke-linecap:round; opacity:.5; }
+    .leaf{ fill:#9aab8e; opacity:.55; }
+    .leaf-dark{ fill:#71856f; opacity:.45; }
+    .petal-rose{ fill:#d79a9f; opacity:.55; }
+    .petal-blush{ fill:#e8b4b2; opacity:.58; }
+    .petal-peach{ fill:#ecc0aa; opacity:.55; }
+    .petal-cream{ fill:#f5e6d7; opacity:.82; }
+    .flower-center{ fill:#c69c64; opacity:.58; }
+
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      z-index:100;
+      display:grid;
+      place-items:center;
+      padding:20px;
+      background:rgba(88,67,67,.24);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      opacity:0;
+      visibility:hidden;
+      transition:opacity .32s ease, visibility .32s ease;
+    }
+
+    .modal-backdrop.active{
+      opacity:1;
+      visibility:visible;
+    }
+
+    .message-heart{
+      position:relative;
+      width:min(860px, 90vw, calc(90vh * 1.125));
+      aspect-ratio:9 / 8;
+      height:auto;
+      max-height:90vh;
+      transform:translateY(18px) scale(.78);
+      opacity:0;
+      transition:transform .48s cubic-bezier(.2,.8,.2,1), opacity .38s ease;
+      filter:drop-shadow(0 30px 42px rgba(69,47,47,.22));
+    }
+
+    .modal-backdrop.active .message-heart{
+      transform:translateY(0) scale(1);
+      opacity:1;
+    }
+
+    .message-heart svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+    }
+
+    .open-heart-shape{
+      fill:#fff6f3;
+      stroke:#d7a1a8;
+      stroke-width:2.5;
+    }
+
+    .open-heart-wash{
+      fill:url(#openHeartWash);
+      opacity:.54;
+    }
+
+    .message-safe{
+      position:absolute;
+      z-index:2;
+      left:50%;
+      top:45.5%;
+      transform:translate(-50%,-50%);
+      width:62%;
+      height:49%;
+      display:flex;
+      flex-direction:column;
+      align-items:stretch;
+      text-align:left;
+      color:#4f3838;
+    }
+
+    .message-title{
+      flex:0 0 auto;
+      margin:0 0 14px;
+      text-align:center;
+      font-size:34px;
+      line-height:1.15;
+      color:#713e4a;
+      font-weight:600;
+    }
+
+    .message-scroll{
+      min-height:0;
+      overflow:auto;
+      padding:0 18px 18px 18px;
+      scrollbar-width:thin;
+      scrollbar-color:#c99ea3 transparent;
+      font-size:24px;
+      line-height:1.56;
+      overscroll-behavior:contain;
+    }
+
+    .message-scroll::-webkit-scrollbar{ width:8px; }
+    .message-scroll::-webkit-scrollbar-thumb{
+      background:#cba3a8;
+      border-radius:10px;
+    }
+    .message-scroll p{ margin:0 0 16px; }
+    .message-scroll p:last-child{ margin-bottom:0; }
+
+    .signature{
+      margin-top:18px !important;
+      text-align:right;
+      font-size:21px;
+      font-style:italic;
+      color:#7a5a57;
+    }
+
+    .close-btn{
+      position:absolute;
+      z-index:4;
+      top:14%;
+      right:14%;
+      width:44px;
+      height:44px;
+      border:1px solid rgba(112,65,74,.16);
+      border-radius:50%;
+      background:rgba(255,250,247,.72);
+      color:#6f4650;
+      font:400 30px/1 Arial, sans-serif;
+      cursor:pointer;
+      box-shadow:0 8px 22px rgba(89,57,62,.1);
+      transition:transform .2s ease, background .2s ease;
+    }
+
+    .close-btn:hover{ transform:scale(1.06); background:#fff; }
+    .close-btn:focus-visible{ outline:3px solid var(--focus); outline-offset:4px; }
+
+    .floaties{
+      position:absolute;
+      inset:0;
+      z-index:110;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .floaty{
+      position:absolute;
+      left:50%;
+      top:50%;
+      opacity:0;
+      font-family:Arial, sans-serif;
+      animation:floatUp 1.4s ease-out forwards;
+    }
+
+    .floaty.petal{
+      width:13px;
+      height:8px;
+      border-radius:70% 30% 70% 30%;
+      background:#e6aeb2;
+      filter:blur(.15px);
+    }
+
+    .floaty.spark{ color:#edc772; font-size:16px; }
+    .floaty.tiny-heart{ color:#cb7f90; font-size:14px; }
+
+    @keyframes floatUp{
+      0%{ opacity:0; transform:translate(var(--x0),var(--y0)) scale(.7) rotate(0deg); }
+      18%{ opacity:.75; }
+      100%{ opacity:0; transform:translate(var(--x1),var(--y1)) scale(1.1) rotate(var(--rot)); }
+    }
+
+    @media (max-width:1180px){
+      .garden{
+        grid-template-columns:repeat(5, minmax(158px, 1fr));
+        gap:25px 20px;
+        max-width:980px;
+      }
+      .heart-button{ width:178px; height:166px; }
+      .heart-label{ font-size:22px; }
+    }
+
+    @media (max-width:900px){
+      .page{ padding-top:50px; }
+      .garden{
+        grid-template-columns:repeat(2, minmax(135px, 160px));
+        gap:28px 28px;
+        max-width:390px;
+      }
+      .heart-button,
+      .heart-button:nth-child(n){
+        width:155px;
+        height:146px;
+        transform:none;
+      }
+      .heart-label{ font-size:21px; width:76%; }
+      .heart-label .mini-heart{ font-size:18px; }
+
+      .botanical.tl{ width:300px; height:240px; opacity:.75; }
+      .botanical.tr{ width:260px; height:220px; opacity:.55; }
+      .botanical.bl{ width:250px; height:210px; opacity:.55; }
+      .botanical.br{ width:320px; height:260px; opacity:.72; }
+
+      .message-heart{
+        width:min(94vw, calc(88vh * 1.125));
+        aspect-ratio:9 / 8;
+        height:auto;
+        max-height:88vh;
+      }
+      .message-safe{
+        width:64%;
+        height:48%;
+        top:45.5%;
+      }
+      .message-title{ font-size:29px; }
+      .message-scroll{
+        font-size:19px;
+        line-height:1.55;
+        padding-right:8px;
+      }
+      .close-btn{
+        top:13%;
+        right:13%;
+        width:42px;
+        height:42px;
+        font-size:27px;
+      }
+    }
+
+    @media (max-width:430px){
+      .page{ padding:42px 18px 64px; }
+      header{ margin-bottom:34px; }
+      h1{ font-size:50px; }
+      .instruction{ font-size:18px; }
+      .subline{ font-size:15px; }
+      .garden{
+        gap:24px 14px;
+        grid-template-columns:repeat(2, minmax(135px, 1fr));
+      }
+      .heart-button,
+      .heart-button:nth-child(n){
+        width:min(150px,42vw);
+        height:min(142px,40vw);
+      }
+      .heart-label{ font-size:20px; }
+      .message-safe{
+        width:66%;
+        height:47%;
+        top:45.5%;
+      }
+      .message-title{
+        font-size:27px;
+        margin-bottom:10px;
+      }
+      .message-scroll{
+        font-size:18px;
+        line-height:1.5;
+      }
+      .close-btn{
+        top:12%;
+        right:10%;
+      }
+      .final-note{ font-size:19px; }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        animation-duration:.001ms !important;
+        animation-iteration-count:1 !important;
+        scroll-behavior:auto !important;
+        transition-duration:.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page" id="page">
+    <!-- Soft watercolor-inspired botanical corners -->
+    <svg class="botanical tl" viewBox="0 0 420 330" aria-hidden="true">
+      <defs>
+        <filter id="waterTL" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="0.7"/>
+        </filter>
+      </defs>
+      <g filter="url(#waterTL)">
+        <path class="stem" d="M22 270 C90 210, 90 88, 205 27" />
+        <path class="stem" d="M48 307 C117 242, 179 203, 303 185" />
+        <path class="stem" d="M12 242 C93 224, 154 163, 173 80" />
+        <ellipse class="leaf" cx="72" cy="226" rx="14" ry="31" transform="rotate(-38 72 226)"/>
+        <ellipse class="leaf-dark" cx="103" cy="183" rx="12" ry="28" transform="rotate(31 103 183)"/>
+        <ellipse class="leaf" cx="132" cy="135" rx="12" ry="30" transform="rotate(-29 132 135)"/>
+        <ellipse class="leaf" cx="160" cy="91" rx="11" ry="28" transform="rotate(36 160 91)"/>
+        <ellipse class="leaf-dark" cx="145" cy="234" rx="13" ry="30" transform="rotate(55 145 234)"/>
+        <ellipse class="leaf" cx="211" cy="214" rx="12" ry="29" transform="rotate(-62 211 214)"/>
+        <ellipse class="leaf-dark" cx="270" cy="194" rx="11" ry="26" transform="rotate(69 270 194)"/>
+        <g transform="translate(68 95)">
+          <ellipse class="petal-rose" cx="0" cy="-24" rx="23" ry="35"/>
+          <ellipse class="petal-blush" cx="23" cy="-8" rx="23" ry="35" transform="rotate(62 23 -8)"/>
+          <ellipse class="petal-rose" cx="15" cy="21" rx="23" ry="35" transform="rotate(132 15 21)"/>
+          <ellipse class="petal-blush" cx="-17" cy="20" rx="23" ry="35" transform="rotate(-128 -17 20)"/>
+          <ellipse class="petal-peach" cx="-25" cy="-9" rx="23" ry="35" transform="rotate(-65 -25 -9)"/>
+          <circle class="flower-center" r="13"/>
+        </g>
+        <g transform="translate(201 191) scale(.72)">
+          <ellipse class="petal-peach" cx="0" cy="-24" rx="23" ry="35"/>
+          <ellipse class="petal-blush" cx="23" cy="-8" rx="23" ry="35" transform="rotate(62 23 -8)"/>
+          <ellipse class="petal-peach" cx="15" cy="21" rx="23" ry="35" transform="rotate(132 15 21)"/>
+          <ellipse class="petal-cream" cx="-17" cy="20" rx="23" ry="35" transform="rotate(-128 -17 20)"/>
+          <ellipse class="petal-blush" cx="-25" cy="-9" rx="23" ry="35" transform="rotate(-65 -25 -9)"/>
+          <circle class="flower-center" r="13"/>
+        </g>
+        <g transform="translate(303 175) scale(.45)">
+          <ellipse class="petal-cream" cx="0" cy="-24" rx="23" ry="35"/>
+          <ellipse class="petal-cream" cx="23" cy="-8" rx="23" ry="35" transform="rotate(62 23 -8)"/>
+          <ellipse class="petal-cream" cx="15" cy="21" rx="23" ry="35" transform="rotate(132 15 21)"/>
+          <ellipse class="petal-blush" cx="-17" cy="20" rx="23" ry="35" transform="rotate(-128 -17 20)"/>
+          <ellipse class="petal-cream" cx="-25" cy="-9" rx="23" ry="35" transform="rotate(-65 -25 -9)"/>
+          <circle class="flower-center" r="13"/>
+        </g>
+      </g>
+    </svg>
+
+    <svg class="botanical tr" viewBox="0 0 420 330" aria-hidden="true">
+      <use href="#botanicalMaster"/>
+      <g>
+        <path class="stem" d="M22 270 C90 210, 90 88, 205 27" />
+        <path class="stem" d="M48 307 C117 242, 179 203, 303 185" />
+        <ellipse class="leaf" cx="72" cy="226" rx="14" ry="31" transform="rotate(-38 72 226)"/>
+        <ellipse class="leaf-dark" cx="132" cy="135" rx="12" ry="30" transform="rotate(-29 132 135)"/>
+        <ellipse class="leaf" cx="211" cy="214" rx="12" ry="29" transform="rotate(-62 211 214)"/>
+        <g transform="translate(76 102) scale(.82)">
+          <ellipse class="petal-blush" cx="0" cy="-24" rx="23" ry="35"/>
+          <ellipse class="petal-rose" cx="23" cy="-8" rx="23" ry="35" transform="rotate(62 23 -8)"/>
+          <ellipse class="petal-peach" cx="15" cy="21" rx="23" ry="35" transform="rotate(132 15 21)"/>
+          <ellipse class="petal-blush" cx="-17" cy="20" rx="23" ry="35" transform="rotate(-128 -17 20)"/>
+          <ellipse class="petal-cream" cx="-25" cy="-9" rx="23" ry="35" transform="rotate(-65 -25 -9)"/>
+          <circle class="flower-center" r="13"/>
+        </g>
+        <g transform="translate(214 205) scale(.52)">
+          <ellipse class="petal-cream" cx="0" cy="-24" rx="23" ry="35"/>
+          <ellipse class="petal-cream" cx="23" cy="-8" rx="23" ry="35" transform="rotate(62 23 -8)"/>
+          <ellipse class="petal-blush" cx="15" cy="21" rx="23" ry="35" transform="rotate(132 15 21)"/>
+          <ellipse class="petal-cream" cx="-17" cy="20" rx="23" ry="35" transform="rotate(-128 -17 20)"/>
+          <ellipse class="petal-peach" cx="-25" cy="-9" rx="23" ry="35" transform="rotate(-65 -25 -9)"/>
+          <circle class="flower-center" r="13"/>
+        </g>
+      </g>
+    </svg>
+
+    <svg class="botanical bl" viewBox="0 0 420 330" aria-hidden="true">
+      <g>
+        <path class="stem" d="M22 270 C90 210, 90 88, 205 27" />
+        <path class="stem" d="M48 307 C117 242, 179 203, 303 185" />
+        <ellipse class="leaf" cx="72" cy="226" rx="14" ry="31" transform="rotate(-38 72 226)"/>
+        <ellipse class="leaf-dark" cx="132" cy="135" rx="12" ry="30" transform="rotate(-29 132 135)"/>
+        <ellipse class="leaf" cx="211" cy="214" rx="12" ry="29" transform="rotate(-62 211 214)"/>
+        <g transform="translate(79 108) scale(.78)">
+          <ellipse class="petal-peach" cx="0" cy="-24" rx="23" ry="35"/>
+          <ellipse class="petal-blush" cx="23" cy="-8" rx="23" ry="35" transform="rotate(62 23 -8)"/>
+          <ellipse class="petal-rose" cx="15" cy="21" rx="23" ry="35" transform="rotate(132 15 21)"/>
+          <ellipse class="petal-cream" cx="-17" cy="20" rx="23" ry="35" transform="rotate(-128 -17 20)"/>
+          <ellipse class="petal-blush" cx="-25" cy="-9" rx="23" ry="35" transform="rotate(-65 -25 -9)"/>
+          <circle class="flower-center" r="13"/>
+        </g>
+      </g>
+    </svg>
+
+    <svg class="botanical br" viewBox="0 0 420 330" aria-hidden="true">
+      <g>
+        <path class="stem" d="M22 270 C90 210, 90 88, 205 27" />
+        <path class="stem" d="M48 307 C117 242, 179 203, 303 185" />
+        <path class="stem" d="M12 242 C93 224, 154 163, 173 80" />
+        <ellipse class="leaf" cx="72" cy="226" rx="14" ry="31" transform="rotate(-38 72 226)"/>
+        <ellipse class="leaf-dark" cx="103" cy="183" rx="12" ry="28" transform="rotate(31 103 183)"/>
+        <ellipse class="leaf" cx="132" cy="135" rx="12" ry="30" transform="rotate(-29 132 135)"/>
+        <ellipse class="leaf" cx="160" cy="91" rx="11" ry="28" transform="rotate(36 160 91)"/>
+        <ellipse class="leaf-dark" cx="145" cy="234" rx="13" ry="30" transform="rotate(55 145 234)"/>
+        <ellipse class="leaf" cx="211" cy="214" rx="12" ry="29" transform="rotate(-62 211 214)"/>
+        <ellipse class="leaf-dark" cx="270" cy="194" rx="11" ry="26" transform="rotate(69 270 194)"/>
+        <g transform="translate(68 95)">
+          <ellipse class="petal-rose" cx="0" cy="-24" rx="23" ry="35"/>
+          <ellipse class="petal-blush" cx="23" cy="-8" rx="23" ry="35" transform="rotate(62 23 -8)"/>
+          <ellipse class="petal-rose" cx="15" cy="21" rx="23" ry="35" transform="rotate(132 15 21)"/>
+          <ellipse class="petal-blush" cx="-17" cy="20" rx="23" ry="35" transform="rotate(-128 -17 20)"/>
+          <ellipse class="petal-peach" cx="-25" cy="-9" rx="23" ry="35" transform="rotate(-65 -25 -9)"/>
+          <circle class="flower-center" r="13"/>
+        </g>
+        <g transform="translate(201 191) scale(.72)">
+          <ellipse class="petal-peach" cx="0" cy="-24" rx="23" ry="35"/>
+          <ellipse class="petal-blush" cx="23" cy="-8" rx="23" ry="35" transform="rotate(62 23 -8)"/>
+          <ellipse class="petal-peach" cx="15" cy="21" rx="23" ry="35" transform="rotate(132 15 21)"/>
+          <ellipse class="petal-cream" cx="-17" cy="20" rx="23" ry="35" transform="rotate(-128 -17 20)"/>
+          <ellipse class="petal-blush" cx="-25" cy="-9" rx="23" ry="35" transform="rotate(-65 -25 -9)"/>
+          <circle class="flower-center" r="13"/>
+        </g>
+        <g transform="translate(303 175) scale(.45)">
+          <ellipse class="petal-cream" cx="0" cy="-24" rx="23" ry="35"/>
+          <ellipse class="petal-cream" cx="23" cy="-8" rx="23" ry="35" transform="rotate(62 23 -8)"/>
+          <ellipse class="petal-cream" cx="15" cy="21" rx="23" ry="35" transform="rotate(132 15 21)"/>
+          <ellipse class="petal-blush" cx="-17" cy="20" rx="23" ry="35" transform="rotate(-128 -17 20)"/>
+          <ellipse class="petal-cream" cx="-25" cy="-9" rx="23" ry="35" transform="rotate(-65 -25 -9)"/>
+          <circle class="flower-center" r="13"/>
+        </g>
+      </g>
+    </svg>
+
+    <header>
+      <p class="eyebrow">WITH LOVE</p>
+      <h1>For Tiff</h1>
+      <p class="instruction">Tap a heart to open a message.</p>
+      <p class="subline">Ten little hearts, each carrying some love for you.</p>
+    </header>
+
+    <section class="garden" id="garden" aria-label="Ten messages of love and support for Tiff"></section>
+
+    <div class="final-note" id="finalNote" aria-live="polite">
+      Ten hearts, one message: you and your family are surrounded by love. ❤️
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="message-heart" id="messageHeart" role="dialog" aria-modal="true" aria-labelledby="messageTitle">
+      <svg viewBox="0 0 900 800" aria-hidden="true">
+        <defs>
+          <radialGradient id="openHeartWash" cx="50%" cy="42%" r="62%">
+            <stop offset="0%" stop-color="#fffdfb"/>
+            <stop offset="58%" stop-color="#fceceb"/>
+            <stop offset="100%" stop-color="#efc7c6"/>
+          </radialGradient>
+        </defs>
+        <path class="open-heart-shape" d="M450 742 C386 689 151 537 85 357 C37 226 104 96 239 82 C326 73 399 116 450 193 C501 116 574 73 661 82 C796 96 863 226 815 357 C749 537 514 689 450 742 Z"/>
+        <path class="open-heart-wash" d="M450 742 C386 689 151 537 85 357 C37 226 104 96 239 82 C326 73 399 116 450 193 C501 116 574 73 661 82 C796 96 863 226 815 357 C749 537 514 689 450 742 Z"/>
+      </svg>
+
+      <button class="close-btn" id="closeBtn" type="button" aria-label="Close message">×</button>
+
+      <div class="message-safe">
+        <h2 class="message-title" id="messageTitle">To Tiff ❤️</h2>
+        <div class="message-scroll" id="messageScroll" tabindex="0"></div>
+      </div>
+    </div>
+    <div class="floaties" id="floaties" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = "tiff-love-card-opened-v1";
+
+      const messages = [
+        {
+          id: 1,
+          label: "To Tiff",
+          color: "var(--heart-1)",
+          message: [
+            "Tiff ơi, my heart is with you and your family during this tough time. My very best wishes to your father in law. I’m praying for a miracle that he will be back to normal soon. Stay strong, dearest Tiff and your beloved 💕"
+          ]
+        },
+        {
+          id: 2,
+          label: "To Tiff",
+          color: "var(--heart-2)",
+          message: [
+            "Dearest Tiff, please take all the time and space you need, and know that I’m here if there is anything at all I can do to support you.",
+            "You and your loved ones are in our thoughts!"
+          ]
+        },
+        {
+          id: 3,
+          label: "To Tiff",
+          color: "var(--heart-3)",
+          message: [
+            "Sending my dearest encouragement to you, anh Luan, Elynna, and your family!",
+            "I hope anh Luan's dad will be in less pain and can eat and sleep well now! With the support of everyone, he will find strength and courage to get through this difficult time.",
+            "My thoughts are with you and your family!"
+          ]
+        },
+        {
+          id: 4,
+          label: "To Tiff",
+          color: "var(--heart-4)",
+          message: [
+            "Tiff, I know this must be such a difficult time for you and your family. I hope you can stay strong and support each other through this difficult period.",
+            "Please also take care of yourself and don’t forget to give yourself some time to rest.",
+            "I’m sending you lots of hugs and strength ❤️"
+          ]
+        },
+        {
+          id: 5,
+          label: "To Tiff",
+          color: "var(--heart-5)",
+          message: [
+            "Hi Tiff, there’s really been so much happening with your family lately. I just hope you’re all getting through these difficult days okay.",
+            "I really hope anh Luan’s father will feel better and have less pain. And please take care of yourself too, chị.",
+            "Sending you lots of love and strength."
+          ]
+        },
+        {
+          id: 6,
+          label: "To Tiff",
+          color: "var(--heart-6)",
+          message: [
+            "Dear Tiff, how are you holding up?",
+            "I heard that challenges in life are ways heaven test the strong and brave.",
+            "I know it has been an extremely difficult year, but I pray that you, anh Luan, Elynna, and your families find the strength, courage, and love to weather the storm.",
+            "The light will always shine for you at the end of the tunnel.",
+            "Lots of love and kisses <3"
+          ]
+        },
+        {
+          id: 7,
+          label: "To Tiff",
+          color: "var(--heart-7)",
+          message: [
+            "Hi Tiff, I’m so sorry for everything you and your family are going through. It’s so much to deal with in such a short time.",
+            "Please know that we’re here for you if you need anything at all.",
+            "Sending you and your family lots of strength and warmth during this difficult time."
+          ]
+        },
+        {
+          id: 8,
+          label: "To Tiff",
+          color: "var(--heart-8)",
+          message: [
+            "Dear Tiff, I’m so sorry you and your family are going through such a difficult time.",
+            "You are incredibly strong, and I hope you can feel all the love and support around you.",
+            "I’m keeping your father-in-law and your whole family in our thoughts, and we truly hope you are able to spend precious time together and create some meaningful memories.",
+            "Sending you lots of strength, love, and hugs. ❤️"
+          ]
+        },
+        {
+          id: 9,
+          label: "To Tiff",
+          color: "var(--heart-9)",
+          message: [
+            "Hey Tiff, this must have been such a tough year for everyone.",
+            "You are doing so well on the most important family metrics and priorities, and I’m sure you’ll all come out stronger and with more love.",
+            "We are all here to support however we can."
+          ]
+        },
+        {
+          id: 10,
+          label: "To Tiff",
+          color: "var(--heart-10)",
+          message: [
+            "I am incredibly sorry that you and your family have to go through such a difficult year.",
+            "Sending everyone a lot of love.",
+            "Don't hesitate to let us know how we can support you with work tasks so you can focus on you and your family."
+          ],
+          signature: "Thibaud"
+        }
+      ];
+
+      const garden = document.getElementById("garden");
+      const modalBackdrop = document.getElementById("modalBackdrop");
+      const messageScroll = document.getElementById("messageScroll");
+      const closeBtn = document.getElementById("closeBtn");
+      const finalNote = document.getElementById("finalNote");
+      const floaties = document.getElementById("floaties");
+
+      let opened = readOpenedState();
+      let activeId = null;
+      let activeButton = null;
+      let pendingFirstRead = false;
+      let lastFocus = null;
+
+      function readOpenedState(){
+        try{
+          const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+          return new Set(Array.isArray(raw) ? raw.filter(id => Number.isInteger(id) && id >= 1 && id <= 10) : []);
+        }catch{
+          return new Set();
+        }
+      }
+
+      function saveOpenedState(){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...opened].sort((a,b) => a-b)));
+      }
+
+      function heartMarkup(msg){
+        return `
+          <svg class="heart-svg" viewBox="0 0 220 205" aria-hidden="true">
+            <path class="heart-shape" d="M110 194 C91 177 24 130 11 79 C1 39 26 10 61 8 C84 7 101 19 110 37 C119 19 136 7 159 8 C194 10 219 39 209 79 C196 130 129 177 110 194 Z"/>
+            <path class="heart-highlight" d="M51 30 C38 35 29 47 28 60 C27 69 30 76 36 80 C39 55 52 38 72 26 C64 25 58 27 51 30 Z"/>
+          </svg>
+          <span class="heart-label">
+            ${msg.label}
+            <span class="mini-heart" aria-hidden="true">❤️</span>
+          </span>
+        `;
+      }
+
+      function renderHearts(){
+        garden.innerHTML = "";
+        messages.forEach(msg => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "heart-button" + (opened.has(msg.id) ? " is-read" : "");
+          button.style.setProperty("--heart-color", opened.has(msg.id) ? "var(--gold)" : msg.color);
+          button.dataset.id = String(msg.id);
+          button.setAttribute("aria-label", `Open message ${msg.id} for Tiff`);
+          button.innerHTML = heartMarkup(msg);
+          button.addEventListener("click", () => openMessage(msg.id, button));
+          garden.appendChild(button);
+        });
+        updateFinalNote();
+      }
+
+      function openMessage(id, button){
+        const msg = messages.find(m => m.id === id);
+        if(!msg) return;
+
+        activeId = id;
+        activeButton = button;
+        pendingFirstRead = !opened.has(id);
+        lastFocus = document.activeElement;
+
+        button.classList.add("opening");
+        setTimeout(() => button.classList.remove("opening"), 500);
+
+        messageScroll.innerHTML = "";
+        msg.message.forEach(text => {
+          const p = document.createElement("p");
+          p.textContent = text;
+          messageScroll.appendChild(p);
+        });
+
+        if(msg.signature){
+          const sig = document.createElement("p");
+          sig.className = "signature";
+          sig.textContent = "— " + msg.signature;
+          messageScroll.appendChild(sig);
+        }
+
+        messageScroll.scrollTop = 0;
+        modalBackdrop.classList.add("active");
+        modalBackdrop.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+
+        releaseFloaties();
+
+        requestAnimationFrame(() => {
+          closeBtn.focus({preventScroll:true});
+        });
+      }
+
+      function closeMessage(){
+        if(!modalBackdrop.classList.contains("active")) return;
+
+        if(pendingFirstRead && activeId !== null){
+          opened.add(activeId);
+          saveOpenedState();
+          if(activeButton){
+            activeButton.classList.add("is-read");
+            activeButton.style.setProperty("--heart-color", "var(--gold)");
+          }
+          updateFinalNote();
+        }
+
+        modalBackdrop.classList.remove("active");
+        modalBackdrop.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+
+        activeId = null;
+        activeButton = null;
+        pendingFirstRead = false;
+
+        if(lastFocus && typeof lastFocus.focus === "function"){
+          setTimeout(() => lastFocus.focus({preventScroll:true}), 80);
+        }
+      }
+
+      function updateFinalNote(){
+        finalNote.classList.toggle("show", opened.size === 10);
+      }
+
+      function releaseFloaties(){
+        floaties.innerHTML = "";
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if(reduce) return;
+
+        const kinds = ["petal","spark","tiny-heart","petal","spark","petal","tiny-heart"];
+        kinds.forEach((kind, i) => {
+          const el = document.createElement("span");
+          el.className = `floaty ${kind}`;
+          if(kind === "spark") el.textContent = "✦";
+          if(kind === "tiny-heart") el.textContent = "♥";
+
+          const startX = -42 + i * 14;
+          const endX = startX + (i % 2 ? 34 : -26);
+          const endY = -130 - (i % 3) * 34;
+          el.style.setProperty("--x0", `${startX}px`);
+          el.style.setProperty("--y0", `${12 + (i%2)*8}px`);
+          el.style.setProperty("--x1", `${endX}px`);
+          el.style.setProperty("--y1", `${endY}px`);
+          el.style.setProperty("--rot", `${-70 + i*24}deg`);
+          el.style.animationDelay = `${i * 55}ms`;
+
+          floaties.appendChild(el);
+        });
+
+        setTimeout(() => { floaties.innerHTML = ""; }, 1900);
+      }
+
+      closeBtn.addEventListener("click", closeMessage);
+
+      modalBackdrop.addEventListener("mousedown", (event) => {
+        if(event.target === modalBackdrop) closeMessage();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if(event.key === "Escape" && modalBackdrop.classList.contains("active")){
+          event.preventDefault();
+          closeMessage();
+        }
+      });
+
+      renderHearts();
+    })();
+  </script>
+</body>
+</html>
